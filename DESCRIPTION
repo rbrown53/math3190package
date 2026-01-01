@@ -1,0 +1,26 @@
+Package: math3190package
+Title: Package for MATH 3190 - Fundamentals of Data Science at SUU
+Version: 0.0.0.9000
+Authors@R: 
+    person("Rick", "Brown", , "richardbrown1@suu.edu", role = c("aut", "cre"))
+Description: This package contains functions and data files needed for MATH 3150 - Applied Statistics taught at Southern Utah University. 
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
+Depends: 
+    R (>= 4.2),
+    tidyverse
+Imports:
+    boot,
+    broom,
+    GGally,
+    gridExtra,
+    nnet,
+    nortest,
+    e1071,
+    naivebayes,
+    MASS
+LazyData: true
+Author: Rick Brown [aut, cre]
+Maintainer: Rick Brown <richardbrown1@suu.edu>
