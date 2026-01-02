@@ -9,7 +9,7 @@
 #' 
 #' @import 
 #'   ggplot2
-#' @importFrom gridExtra grid.arrange
+#'   patchwork
 #'
 #' @export plot.boot3150
 #' @export
@@ -37,7 +37,7 @@ plot.boot3150 <- function(x) {
     } else {
       p2 <- p2 + labs(title = paste0("QQ Plot for stat", i))
     }
-    gridExtra::grid.arrange(p1, p2, nrow = 1)
+    p1 | p2
     if(ncols > 1) {
       if(i < ncols) {
         readline(prompt = paste0("Output for stat", i, 

@@ -28,9 +28,10 @@
 #' @import
 #'   dplyr
 #'   ggplot2
-#'   e1071
-#'   naivebayes
-#'   MASS
+#'
+#' @importFrom MASS lda qda
+#' @importFrom e1071 svm
+#' @importFrom naivebayes naive_bayes
 #'
 #' @export
 
