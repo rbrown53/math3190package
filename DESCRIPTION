@@ -14,10 +14,11 @@ Depends:
 Imports:
     boot,
     broom,
+    caret,
+    dslabs,
     GGally,
-    gridExtra,
+    patchwork,
     nnet,
-    nortest,
     e1071,
     naivebayes,
     MASS
