@@ -23,7 +23,19 @@ Imports:
     naivebayes,
     MASS,
     glmnet,
-    glmnetUtils
+    glmnetUtils,
+    faraway,
+    car,
+    pls,
+    umap,
+    ggfortify,
+    tsibble,
+    ggtime,
+    tseries,
+    forecast,
+    reticulate,
+    DBI,
+    RMySQL
 LazyData: true
 Author: Rick Brown [aut, cre]
 Maintainer: Rick Brown <richardbrown1@suu.edu>
