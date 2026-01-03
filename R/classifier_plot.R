@@ -23,7 +23,6 @@
 #' mtcars2 <- mtcars |> mutate(vs = factor(vs), am = factor(am))
 #' classifier <- MASS::lda(vs ~ mpg + disp + am, data = mtcars2)
 #' classifier_plot(classifier, data = mtcars2)
-#' plot_tukey(t)
 #'
 #' @import
 #'   dplyr
