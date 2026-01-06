@@ -21,7 +21,8 @@ plot.boot3150 <- function(x) {
     p1 <- ggplot(plot_dat[,i], aes(x = .data[[paste0("stat", i)]])) +
       geom_histogram(color = "black", fill = "lightblue", bins = 30) +
       geom_vline(xintercept = x$boot_info[i, 3][[1]], color = "red",
-                 linetype = "dashed")
+                 linetype = "dashed") +
+      theme_bw()
     if("term" %in% names(x$boot_info)) {
       p1 <- p1 + labs(title = paste0("Histogram for '", 
                                      x$boot_info$term[i], "'"))
@@ -30,7 +31,8 @@ plot.boot3150 <- function(x) {
     }
     p2 <- ggplot(plot_dat[,i], aes(sample = .data[[paste0("stat", i)]])) +
       geom_qq_line() +
-      geom_qq()
+      geom_qq() +
+      theme_bw()
     if("term" %in% names(x$boot_info)) {
       p2 <- p2 + labs(title = paste0("QQ Plot for '", 
                                      x$boot_info$term[i], "'"))
