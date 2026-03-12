@@ -1,9 +1,9 @@
 #' Plots the Points and Predicted Region for a Classifier Model
 #'
 #' This function plots the points and predicted region for a classifier model of
-#' class "naive_bayes", "lda", or "svm". This function can support up to three
-#' predictor variables: two of which can be quantitative and one can be
-#' categorical. 
+#' class "glm" with family = "binomial", "naive_bayes", "lda", or "svm". 
+#' This function can support up to three predictor variables: two of which can 
+#' be quantitative and one can be categorical. 
 #'
 #' @param classifier_model The classifier model of class "naive_bayes", "lda", 
 #' or "svm".
@@ -34,8 +34,11 @@
 #'
 #' @export
 
-classifier_plot <- function(classifier_model, data, 
-                            res = 200, sv_diamonds = TRUE) {
+classifier_plot <- function(classifier_model, 
+                            data, 
+                            res = 200, 
+                            logistic_cutoff = 0.5,
+                            sv_diamonds = FALSE) {
   # 1. Identify predictor and response names
   all_vars <- all.vars(
     formula(classifier_model$call)
@@ -105,11 +108,20 @@ classifier_plot <- function(classifier_model, data,
       grid <- expand.grid(setNames(list(grid_range_x, grid_range_y), c(x_var, y_var)))
     }
     
-    if(inherits(classifier_model, "lda")) {
+    if (inherits(classifier_model, "lda")) {
       grid$predicted <- predict(classifier_model, grid)$class
-    } else if(inherits(classifier_model, "naive_bayes") |
-              inherits(classifier_model, "svm")) {
+    } else if (inherits(classifier_model, "naive_bayes") ||
+               inherits(classifier_model, "svm")) {
       grid$predicted <- predict(classifier_model, grid, type = "class")
+    } else if (inherits(classifier_model, "glm")) {
+      glm_preds <- predict(classifier_model, grid, type = "response")
+      grid$predicted <- factor(
+        ifelse(
+          glm_preds > logistic_cutoff, 
+          levels(data[[response_var]])[2], 
+          levels(data[[response_var]])[1]
+        )
+      )
     }
     grid$pred_num <- as.numeric(grid$predicted)
     
@@ -137,7 +149,7 @@ classifier_plot <- function(classifier_model, data,
     # scale_fill_viridis_d(option = "viridis") +
     # theme_minimal()
     
-    if(inherits(classifier_model, "lda")) {
+    if (inherits(classifier_model, "lda")) {
       # Plotting the group-specific X marks
       p <- p + geom_point(data = facet_means, 
                           aes(x = m1, y = m2, color = .data[[response_var]]), 
@@ -156,7 +168,7 @@ classifier_plot <- function(classifier_model, data,
         classifier_model$kernel == 2 ~ "Radial Basis",
         classifier_model$kernel == 3 ~ "Sigmoid"
       )
-      if(sv_diamonds) {
+      if (sv_diamonds) {
         p <- p + geom_point(data = data[classifier_model$index,], 
                             aes(x = .data[[x_var]], y = .data[[y_var]]),
                             shape = 5, size = 5, color = "black")
@@ -175,6 +187,11 @@ classifier_plot <- function(classifier_model, data,
                       paste0("Using a ", kenel_type, 
                              " Kernel with Cost = ", classifier_model$cost))
              ),
+             fill = "Predicted", color = "Actual", shape = "Actual")
+    } else if (inherits(classifier_model, "glm")) {
+      p <- p + 
+        labs(title = paste("Logistic Regression Decision Boundaries (2D):", 
+                           response_var),
              fill = "Predicted", color = "Actual", shape = "Actual")
     }
     
@@ -224,6 +241,15 @@ classifier_plot <- function(classifier_model, data,
     } else if(inherits(classifier_model, "naive_bayes") |
               inherits(classifier_model, "svm")) {
       grid$predicted <- predict(classifier_model, grid, type = "class")
+    } else if (inherits(classifier_model, "glm")) {
+      glm_preds <- predict(classifier_model, grid, type = "response")
+      grid$predicted <- factor(
+        ifelse(
+          glm_preds > logistic_cutoff, 
+          levels(data[[response_var]])[2], 
+          levels(data[[response_var]])[1]
+        )
+      )
     }
     
     # Identify the cutoff point(s) where predictions change
@@ -266,6 +292,12 @@ classifier_plot <- function(classifier_model, data,
         labs(title = paste("SVM Decision Boundary (1D):", response_var),
              subtitle = "Dashed line indicates decision boundary",
              fill = "Actual Class")
+    } else if (inherits(classifier_model, "glm")) {
+      p <- p + 
+        labs(title = paste("Logistic Regression Decision Boundary (1D):", 
+                           response_var),
+             subtitle = "Dashed line indicates decision boundary",
+             fill = "Actual Class") 
     }
     
     if(length(categorical) != 0) {
@@ -280,6 +312,7 @@ classifier_plot <- function(classifier_model, data,
     p
     
   } else {
-    stop("This function only supports 1 or 2 predictor variables unless there is a categorical predictor.")
+    stop(paste0("This function only supports 1 or 2 predictor variables ", 
+                "unless there is a categorical predictor."))
   }
 }

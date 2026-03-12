@@ -4,7 +4,13 @@
 \alias{classifier_plot}
 \title{Plots the Points and Predicted Region for a Classifier Model}
 \usage{
-classifier_plot(classifier_model, data, res = 200, sv_diamonds = TRUE)
+classifier_plot(
+  classifier_model,
+  data,
+  res = 200,
+  logistic_cutoff = 0.5,
+  sv_diamonds = FALSE
+)
 }
 \arguments{
 \item{classifier_model}{The classifier model of class "naive_bayes", "lda",
@@ -26,9 +32,9 @@ any ggplot object.
 }
 \description{
 This function plots the points and predicted region for a classifier model of
-class "naive_bayes", "lda", or "svm". This function can support up to three
-predictor variables: two of which can be quantitative and one can be
-categorical.
+class "glm" with family = "binomial", "naive_bayes", "lda", or "svm".
+This function can support up to three predictor variables: two of which can
+be quantitative and one can be categorical.
 }
 \examples{
 data(mtcars)
