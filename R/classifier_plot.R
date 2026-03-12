@@ -38,8 +38,8 @@ classifier_plot <- function(classifier_model, data,
                             res = 200, sv_diamonds = TRUE) {
   # 1. Identify predictor and response names
   all_vars <- all.vars(
-    classifier_model$call
-  )[-length(all.vars(classifier_model$call))]
+    formula(classifier_model$call)
+  )
   response_var <- all_vars[1]
   predictor_vars <- all_vars[-1]
   # categorical <- names(classifier_model$xlevels)
